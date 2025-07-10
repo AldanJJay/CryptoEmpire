@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "versioningit"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
@@ -28,21 +28,17 @@ dependencies = [
     "pyxel==1.9.0",
     "python-vlc==3.0.16120",
     "platformdirs==3.9.1",
-    "Pillow==10.3.0",
-    # 2.0.2 is the last version of miniupnpc that was released in a .tar.gz format, allowing it to be built on UNIX
-    # systems. All releases since have been for Windows only. As such, we pin different versions for Windows and
-    # non-Windows machines.
-    "miniupnpc==2.0.2; platform_system != 'Windows'",
-    "miniupnpc==2.2.7; platform_system == 'Windows'"
+    "pillow>=10.4.0",
+    # UPnP support for networking - temporarily disabled for Windows development
+    # "miniupnpc==2.0.2; platform_system != 'Windows'",
+    # "miniupnpc==2.2.7; platform_system == 'Windows'"
 ]
-dynamic = [
-    "version"
-]
+version = "0.1.0"
 
 # We use gui-scripts rather than just scripts so that Windows users can run them without a console.
 [project.gui-scripts]
 # This installs a 'microcosm' binary that runs the game.
-microcosm = "microcosm.source.game:Game"
+microcosm = "source.game:Game"
 
 [project.urls]
 Documentation = "https://github.com/ChrisNeedham24/microcosm#readme"
@@ -61,17 +57,12 @@ exclude = [
     "source/tests/*"
 ]
 
-# Add a microcosm prefix onto the source directory so that it's installed under 'microcosm/' in site-packages, and not
-# under 'source/', which isn't particularly helpful.
-[tool.hatch.build.targets.wheel.sources]
-"" = "microcosm"
-
-# Dynamically version based on the latest git tag.
-[tool.hatch.version]
-source = "versioningit"
-
-# Don't do any local versioning with commit hashes or dates - PyPI doesn't like that.
-[tool.versioningit.format]
-distance = "{base_version}.post{distance}"
-dirty = "{base_version}"
-distance-dirty = "{base_version}.post{distance}"
+# UV configuration
+[tool.uv]
+dev-dependencies = [
+    "pylint==2.17.1",
+    "coverage==6.5.0",
+    "nuitka==1.5.5",
+    "imageio==2.26.1",
+    "hatch==1.14.0",
+]

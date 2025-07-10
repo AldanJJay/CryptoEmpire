@@ -28,7 +28,19 @@ if platform.system() == "Windows":
 # We need to disable a lint rule for the miniupnpc import because it doesn't actually declare UPnP in its module. This
 # isn't our fault, so we can just disable the rule.
 # pylint: disable=no-name-in-module
-from miniupnpc import UPnP
+try:
+    from miniupnpc import UPnP
+    MINIUPNPC_AVAILABLE = True
+except ImportError:
+    MINIUPNPC_AVAILABLE = False
+    # Create a dummy UPnP class for development when miniupnpc is not available
+    class UPnP:
+        def __init__(self):
+            pass
+        def discover(self):
+            return 0
+        def selectigd(self):
+            return False
 
 from source.display.board import Board
 from source.display.menu import SetupOption
